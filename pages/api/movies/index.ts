@@ -1,11 +1,16 @@
 import {NextApiRequest, NextApiResponse} from 'next';
 import clientPromise from "../../../lib/mongodb";
+import {ResponseData} from "../../../types/reponse_data";
 
-type ResponseData = {
-    status: number;
-    data: any[];
-};
-
+/**
+ * @swagger
+ * /api/movies:
+ *   get:
+ *     description: Returns movies
+ *     responses:
+ *       200:
+ *         description: Hello Movies
+ */
 export default async function handler(
     req: NextApiRequest,
     res: NextApiResponse<ResponseData>) {
