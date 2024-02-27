@@ -3,37 +3,6 @@ import clientPromise from '../../../lib/mongodb';
 import { ObjectId } from 'mongodb';
 import {ResponseData} from "../../../types/reponse_data";
 
-/**
- * @swagger
- * /api/movie/{idMovie}:
- *   get:
- *     summary: Retrieve a single movie by its ID
- *     description: Fetches a single movie document from the MongoDB collection by its ID.
- *     parameters:
- *       - in: path
- *         name: idMovie
- *         required: true
- *         description: MongoDB ObjectId of the movie to retrieve.
- *         schema:
- *           type: string
- *     responses:
- *       200:
- *         description: A single movie object
- *         content:
- *           application/json:
- *             schema:
- *               type: object
- *               properties:
- *                 status:
- *                   type: integer
- *                   example: 200
- *                 data:
- *                   $ref: '#/components/schemas/Movie'
- *       404:
- *         description: Movie not found
- *       500:
- *         description: Server error
- */
 async function getMovie(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
     try {
         const { idMovie } = req.query;

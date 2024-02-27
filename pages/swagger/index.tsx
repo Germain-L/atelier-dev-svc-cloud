@@ -7,7 +7,7 @@ const Swagger = (): JSX.Element => {
         <div>
             <Head>
                 <title>BrowserStack Demo API</title>
-                <meta name="description" content="BrowserStack Demo API Swagger"/>
+                <meta name="description" content="MFLIX API"/>
                 <link rel="icon" href="/favicon.svg"/>
             </Head>
             <SwaggerUI url="/api/doc"/>
