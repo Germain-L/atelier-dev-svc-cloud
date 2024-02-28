@@ -10,11 +10,6 @@ class MovieService {
         this.dbPromise = this.initializeDb();
     }
 
-    private async initializeDb(): Promise<Db> {
-        const client = await clientPromise;
-        return client.db("sample_mflix");
-    }
-
     public async getMovie(idMovie: string): Promise<IMovie | null> {
         if (!ObjectId.isValid(idMovie)) {
             throw new Error('Invalid movie ID');
@@ -24,7 +19,7 @@ class MovieService {
         const movie = await db.collection("movies").findOne({_id: new ObjectId(idMovie)});
 
         return movie ? {
-            _id: movie._id.toString(),
+            _id: movie._id,
             title: movie.title,
             year: movie.year,
             genres: movie.genres,
@@ -38,17 +33,17 @@ class MovieService {
     public async getMovies(limit: number): Promise<IMovie[]> {
         const db = await this.dbPromise;
         const movieDocuments = await db.collection("movies").find().limit(limit).toArray();
+        return movieDocuments as IMovie[];
+    }
 
-        return movieDocuments.map(movie => ({
-            _id: movie._id.toString(), // Convert ObjectId to string
-            title: movie.title,
-            year: movie.year,
-            genres: movie.genres,
-            runtime: movie.runtime,
-            cast: movie.cast,
-            plot: movie.plot,
-            poster: movie.poster
-        }));
+    public async createMovie(movie: IMovie): Promise<void> {
+        const db = await this.dbPromise;
+        const result = await db.collection("movies").insertOne(movie);
+    }
+
+    private async initializeDb(): Promise<Db> {
+        const client = await clientPromise;
+        return client.db("sample_mflix");
     }
 }
 
