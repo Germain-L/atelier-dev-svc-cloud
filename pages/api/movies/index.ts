@@ -1,6 +1,7 @@
 import {NextApiRequest, NextApiResponse} from "next";
-import {ResponseData} from "../../../types/reponse_data";
-import clientPromise from "../../../lib/mongodb";
+import {ErrorResponse, SuccessResponse} from "../../../types/responses";
+import {IMovie} from "../../../types/interfaces/movie";
+import {getMovies} from "../../../functions/movies/get";
 
 /**
  * @swagger
@@ -64,13 +65,22 @@ import clientPromise from "../../../lib/mongodb";
  */
 export default async function handler(
     req: NextApiRequest,
-    res: NextApiResponse<ResponseData>) {
-    const client = await clientPromise;
-    const db = client.db("sample_mflix");
-    const movies = await db.collection("movies")
-        .find({})
-        .limit(10)
-        .toArray();
+    res: NextApiResponse<SuccessResponse<IMovie[]> | ErrorResponse>
+) {
+    if (req.method !== 'GET') {
+        // If not, return a 405 Method Not Allowed status code
+        // inform the client about allowed methods
+        res.setHeader('Allow', ['GET']);
+        return res.status(405).json({status: 405, message: 'Method Not Allowed'});
+    }
 
-    res.json({status: 200, data: movies})
+    try {
+        const movies = await getMovies(10); // Fetch the top 10 movies
+        res.status(200).json({status: 200, data: movies});
+    } catch (error) {
+        console.error("Failed to fetch movies:", error);
+        // Providing a null or an empty array for data in case of an error
+        // Adjust based on your preference or requirements
+        res.status(500).json({status: 500, message: "Failed to fetch movies"});
+    }
 }
