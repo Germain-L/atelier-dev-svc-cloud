@@ -40,7 +40,7 @@ Set up a MongoDB database either locally or with [MongoDB Atlas for free](https:
 Copy the `env.local.example` file in this directory to `.env.local` (which will be ignored by Git):
 
 ```bash
-cp .env.local.example .env.local
+cp .env.local.local.example .env.local.local
 ```
 
 Set each variable on `.env.local`:
