@@ -7,6 +7,12 @@ const swaggerHandler = withSwagger({
             title: 'NextJS Swagger',
             version: '0.1.0',
         },
+        servers: [
+            {
+                url: 'http://localhost:3000', // Remplacez 3000 par le port utilisé si différent
+                description: 'Serveur de développement local',
+            },
+        ],
     },
     apiFolder: 'pages/api',
 });

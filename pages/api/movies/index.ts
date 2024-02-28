@@ -1,7 +1,8 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {ErrorResponse, SuccessResponse} from "../../../types/responses";
 import {IMovie} from "../../../types/interfaces/movie";
-import {getMovies} from "../../../functions/movies/get";
+import clientPromise from "../../../lib/mongodb";
+import movie_service from "../../../lib/services/movie_service";
 
 /**
  * @swagger
@@ -75,7 +76,12 @@ export default async function handler(
     }
 
     try {
-        const movies = await getMovies(10); // Fetch the top 10 movies
+        // Parse the `limit` parameter, default to 10 if not provided
+        const limit = parseInt(req.query.limit as string, 10) || 10;
+
+        // Fetch movies from the database using the movie service
+        const movies = await movie_service.getMovies(limit);
+
         res.status(200).json({status: 200, data: movies});
     } catch (error) {
         console.error("Failed to fetch movies:", error);
