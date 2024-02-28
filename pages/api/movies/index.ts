@@ -1,6 +1,6 @@
-import {NextApiRequest, NextApiResponse} from 'next';
-import clientPromise from "../../../lib/mongodb";
+import {NextApiRequest, NextApiResponse} from "next";
 import {ResponseData} from "../../../types/reponse_data";
+import clientPromise from "../../../lib/mongodb";
 
 /**
  * @swagger
@@ -21,23 +21,46 @@ import {ResponseData} from "../../../types/reponse_data";
  *   schemas:
  *     Movie:
  *       type: object
- *       required:
- *         - title
  *       properties:
+ *         _id:
+ *           type: string
+ *           description: Unique identifier for the movie
  *         title:
  *           type: string
- *           description: Le titre du film.
+ *           description: Title of the movie
  *         year:
  *           type: integer
- *           description: L'année de sortie du film.
- *         director:
- *           type: string
- *           description: Le réalisateur du film.
- *         genre:
+ *           format: int64
+ *           description: Release year of the movie
+ *         genres:
  *           type: array
  *           items:
  *             type: string
- *           description: Les genres du film.
+ *           description: List of genres the movie belongs to
+ *         runtime:
+ *           type: integer
+ *           format: int32
+ *           description: Runtime of the movie in minutes
+ *         cast:
+ *           type: array
+ *           items:
+ *             type: string
+ *           description: List of main cast members
+ *         plot:
+ *           type: string
+ *           description: Brief summary of the movie plot
+ *         poster:
+ *           type: string
+ *           description: URL to the movie poster image
+ *       required:
+ *         - _id
+ *         - title
+ *         - year
+ *         - genres
+ *         - runtime
+ *         - cast
+ *         - plot
+ *         - poster
  */
 export default async function handler(
     req: NextApiRequest,
