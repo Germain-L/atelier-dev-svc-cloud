@@ -10,6 +10,14 @@ import movie_service from "../../../lib/services/movie_service";
  *   get:
  *     summary: Récupère tous les films
  *     description: Renvoie une liste de tous les films disponibles dans la base de données.
+ *     parameters:
+ *       - in: query
+ *         name: limit
+ *         schema:
+ *           type: integer
+ *           default: 10
+ *         required: false
+ *         description: Limite le nombre de films renvoyés. La valeur par défaut est 10.
  *     responses:
  *       200:
  *         description: Une liste de films.
