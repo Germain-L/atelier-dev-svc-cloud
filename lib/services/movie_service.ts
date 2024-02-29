@@ -2,7 +2,7 @@ import clientPromise from "../mongodb";
 import {Db, ObjectId} from "mongodb";
 import {IMovie} from "../../types/interfaces/movie";
 
-class MovieService {
+export class MovieService {
     private readonly dbPromise: Promise<Db>;
 
     constructor() {

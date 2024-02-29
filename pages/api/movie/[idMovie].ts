@@ -26,18 +26,7 @@ export default async function handler(
             return res.status(404).json({status: 404, message: 'Movie not found'});
         }
 
-        const movieData: IMovie = {
-            _id: movie._id.toString(), // Convert ObjectId to string
-            title: movie.title,
-            year: movie.year,
-            genres: movie.genres,
-            runtime: movie.runtime,
-            cast: movie.cast,
-            plot: movie.plot,
-            poster: movie.poster
-        };
-
-        res.status(200).json({status: 200, data: movieData});
+        res.status(200).json({status: 200, data: movie});
     } catch (error) {
         console.error("Failed to fetch the movie:", error);
         res.status(500).json({status: 500, message: "Failed to fetch the movie"});
