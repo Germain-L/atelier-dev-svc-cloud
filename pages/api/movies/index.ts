@@ -1,15 +1,20 @@
 import {NextApiRequest, NextApiResponse} from "next";
 import {ErrorResponse, SuccessResponse} from "../../../types/responses";
 import {IMovie} from "../../../types/interfaces/movie";
-import clientPromise from "../../../lib/mongodb";
 import movie_service from "../../../lib/services/movie_service";
 
 /**
  * @swagger
+ * tags:
+ *   - name: Movies
+ *     description: API endpoints related to movies
+ *
  * /api/movies:
  *   get:
+ *     tags:
+ *       - Movies
  *     summary: Récupère tous les films
- *     description: Renvoie une liste de tous les films disponibles dans la base de données.
+ *     description: Renvoie une liste de tous les films disponibles dans la base de données. Peut être limité par le paramètre `limit`.
  *     parameters:
  *       - in: query
  *         name: limit
@@ -27,6 +32,11 @@ import movie_service from "../../../lib/services/movie_service";
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Movie'
+ *       400:
+ *         description: Requête invalide, par exemple, limite non valide.
+ *       500:
+ *         description: Erreur interne du serveur.
+ *
  * components:
  *   schemas:
  *     Movie:
@@ -34,34 +44,34 @@ import movie_service from "../../../lib/services/movie_service";
  *       properties:
  *         _id:
  *           type: string
- *           description: Unique identifier for the movie
+ *           description: Identifiant unique du film
  *         title:
  *           type: string
- *           description: Title of the movie
+ *           description: Titre du film
  *         year:
  *           type: integer
  *           format: int64
- *           description: Release year of the movie
+ *           description: Année de sortie du film
  *         genres:
  *           type: array
  *           items:
  *             type: string
- *           description: List of genres the movie belongs to
+ *           description: Liste des genres auxquels appartient le film
  *         runtime:
  *           type: integer
  *           format: int32
- *           description: Runtime of the movie in minutes
+ *           description: Durée du film en minutes
  *         cast:
  *           type: array
  *           items:
  *             type: string
- *           description: List of main cast members
+ *           description: Liste des principaux acteurs du film
  *         plot:
  *           type: string
- *           description: Brief summary of the movie plot
+ *           description: Résumé succinct de l'intrigue du film
  *         poster:
  *           type: string
- *           description: URL to the movie poster image
+ *           description: URL de l'affiche du film
  *       required:
  *         - _id
  *         - title

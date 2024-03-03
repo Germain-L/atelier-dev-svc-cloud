@@ -6,7 +6,6 @@ export class MovieService {
     private readonly dbPromise: Promise<Db>;
 
     constructor() {
-        // Initialize the database connection when the service is instantiated
         this.dbPromise = this.initializeDb();
     }
 
