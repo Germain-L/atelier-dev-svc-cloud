@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 
 export interface IComment {
-    _id: ObjectId,
+    _id?: ObjectId,
     name: string,
     email: string,
     movie_id: ObjectId,

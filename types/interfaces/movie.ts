@@ -1,7 +1,7 @@
 import {ObjectId} from "mongodb";
 
 export interface IMovie {
-    _id: ObjectId;
+    _id?: ObjectId;
     title: string;
     year: number;
     genres: string[];

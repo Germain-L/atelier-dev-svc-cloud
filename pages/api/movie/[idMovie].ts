@@ -2,7 +2,7 @@ import {NextApiRequest, NextApiResponse} from "next";
 import {ErrorResponse, SuccessResponse} from "../../../types/responses";
 import {IMovie} from "../../../types/interfaces/movie";
 import {ObjectId} from "mongodb";
-import movie_service from "../../../lib/services/movie_service";
+import movie_service from "../../../lib/services/MovieService";
 
 /**
  * @swagger
