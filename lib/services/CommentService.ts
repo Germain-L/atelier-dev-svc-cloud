@@ -11,18 +11,21 @@ export class CommentService {
 
     /**
      * Retrieves comments for a specific movie.
-     * @param {string} movieId - The ID of the movie to retrieve comments for.
+     * @param {string} idMovie - The ID of the movie to retrieve comments for.
      * @returns {Promise<IComment[]>} An array of comments for the movie.
      */
-    public async getCommentsByMovieId(movieId: string): Promise<IComment[]> {
-        if (!ObjectId.isValid(movieId)) {
+    public async getCommentsByMovieId(idMovie: string): Promise<IComment[] | null> {
+        if (!ObjectId.isValid(idMovie)) {
             throw new Error('Invalid movie ID');
         }
 
         const db = await this.dbPromise;
-        const comments = await db.collection("comments").find({movie_id: new ObjectId(movieId)}).toArray();
+        const movie = await db.collection("movies").findOne({_id: new ObjectId(idMovie)});
+
+        const comments = await db.collection("comments").find({movie_id: new ObjectId(idMovie)}).toArray();
         return comments as IComment[];
     }
+
 
     /**
      * Creates a new comment in the database.
