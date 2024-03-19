@@ -20,8 +20,6 @@ export class CommentService {
         }
 
         const db = await this.dbPromise;
-        const movie = await db.collection("movies").findOne({_id: new ObjectId(idMovie)});
-
         const comments = await db.collection("comments").find({movie_id: new ObjectId(idMovie)}).toArray();
         return comments as IComment[];
     }
