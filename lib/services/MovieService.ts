@@ -50,10 +50,11 @@ export class MovieService {
      * @param {IMovie} movie - The movie data to create.
      * @returns {Promise<void>}
      */
-    public async createMovie(movie: IMovie): Promise<void> {
+    public async createMovie(movie: IMovie): Promise<IMovie> {
         const db = await this.dbPromise;
         try {
-            await db.collection("movies").insertOne(movie);
+            const createdMovieDocument = await db.collection("movies").insertOne(movie);
+            return createdMovieDocument as unknown as IMovie;
         } catch (error) {
             console.error("Failed to create movie:", error);
             // Optionally, rethrow a custom error for the caller to handle
