@@ -32,6 +32,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     const secretString = process.env.JWT_SECRET as string;
-    const token = jwt.sign({userId: user._id}, secretString, {expiresIn: '1h'});
+    const access_token = jwt.sign({userId: user._id}, secretString, {expiresIn: '1h'});
 
+    // put token in local storage
+    localStorage.setItem('access_token', access_token);
+    return res.status(200).json({token: access_token});
 }
