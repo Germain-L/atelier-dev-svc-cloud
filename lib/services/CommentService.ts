@@ -24,16 +24,36 @@ export class CommentService {
         return comments as IComment[];
     }
 
+    /**
+     * Retrieves a specific comment for a movie.
+     * @param {string} idComment - The ID of the comment to retrieve.
+     * @returns {Promise<IComment | null>} The comment if found, or null if not found.
+     */
+    public async getCommentByIds(idComment: string): Promise<IComment | null> {
+        if (!ObjectId.isValid(idComment)) {
+            throw new Error('Invalid comment ID or movie ID');
+        }
+
+        const db = await this.dbPromise;
+        const comment = await db.collection("comments").findOne({
+            _id: new ObjectId(idComment)
+        });
+        return comment as IComment;
+    }
+
 
     /**
      * Creates a new comment in the database.
      * @param {IComment} comment - The comment data to create.
      * @returns {Promise<void>}
      */
-    public async createComment(comment: IComment): Promise<void> {
+    public async createComment(comment: IComment): Promise<IComment> {
         const db = await this.dbPromise;
         try {
-            await db.collection("comments").insertOne(comment);
+            comment.movie_id = new ObjectId(comment.movie_id);
+            comment.date = new Date();
+            const commentDoc = await db.collection("comments").insertOne(comment);
+            return commentDoc as unknown as IComment;
         } catch (error) {
             console.error("Failed to create comment:", error);
             throw new Error("An error occurred while creating the comment.");
@@ -44,16 +64,17 @@ export class CommentService {
      * Updates an existing comment in the database.
      * @param {string} commentId - The ID of the comment to update.
      * @param {Partial<IComment>} commentUpdate - The comment data to update.
-     * @returns {Promise<void>}
+     * @returns {Promise<IComment>}
      */
-    public async updateComment(commentId: string, commentUpdate: Partial<IComment>): Promise<void> {
+    public async updateComment(commentId: string, commentUpdate: Partial<IComment>): Promise<IComment> {
         if (!ObjectId.isValid(commentId)) {
             throw new Error('Invalid comment ID');
         }
 
         const db = await this.dbPromise;
         try {
-            await db.collection("comments").updateOne({_id: new ObjectId(commentId)}, {$set: commentUpdate});
+            const commentDoc = await db.collection("comments").updateOne({_id: new ObjectId(commentId)}, {$set: commentUpdate});
+            return commentDoc as unknown as IComment;
         } catch (error) {
             console.error("Failed to update comment:", error);
             throw new Error("An error occurred while updating the comment.");
