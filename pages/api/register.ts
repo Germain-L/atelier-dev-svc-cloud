@@ -1,5 +1,4 @@
 import type {NextApiRequest, NextApiResponse} from 'next';
-import bcrypt from 'bcryptjs';
 import {IUser} from "../../types/interfaces/users";
 import UserService from "../../lib/services/UserService";
 
@@ -19,15 +18,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         return res.status(409).json({message: 'User already exists'});
     }
 
-    const hashedPassword = await bcrypt.hash(password, 12);
-    const newUser = {
-        email,
-        name,
-        password: hashedPassword,
-    };
-
     try {
-        await UserService.createUser(newUser);
+        await UserService.createUser({email, name, password});
     } catch (error) {
         console.error("Failed to create user:", error);
         return res.status(500).json({message: 'An error occurred while creating the user'});

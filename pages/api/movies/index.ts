@@ -1,7 +1,8 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {ErrorResponse, SuccessResponse} from "../../../types/responses";
-import {IMovie} from "../../../types/interfaces/movie";
-import movie_service from "../../../lib/services/MovieService";
+import { NextApiRequest, NextApiResponse } from "next";
+import { ErrorResponse, SuccessResponse } from "../../../types/responses";
+import { IMovie } from "../../../types/interfaces/movie";
+import MovieService from "../../../lib/services/MovieService";
+import {authenticate} from "../../../lib/authMiddleware";
 
 /**
  * @swagger
@@ -23,6 +24,8 @@ import movie_service from "../../../lib/services/MovieService";
  *           default: 10
  *         required: false
  *         description: Limite le nombre de films renvoyés. La valeur par défaut est 10.
+ *     security:
+ *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Une liste de films.
@@ -32,6 +35,12 @@ import movie_service from "../../../lib/services/MovieService";
  *               type: array
  *               items:
  *                 $ref: '#/components/schemas/Movie'
+ *       401:
+ *         description: Unauthorized - Bearer token is missing or invalid
+ *         content:
+ *           application/json:
+ *             schema:
+ *               $ref: '#/components/schemas/Error'
  *       400:
  *         description: Requête invalide, par exemple, limite non valide.
  *       500:
@@ -82,7 +91,7 @@ import movie_service from "../../../lib/services/MovieService";
  *         - plot
  *         - poster
  */
-export default async function handler(
+export default authenticate(async function handler(
     req: NextApiRequest,
     res: NextApiResponse<SuccessResponse<IMovie[]> | ErrorResponse>
 ) {
@@ -90,7 +99,7 @@ export default async function handler(
         // If not, return a 405 Method Not Allowed status code
         // inform the client about allowed methods
         res.setHeader('Allow', ['GET']);
-        return res.status(405).json({status: 405, message: 'Method Not Allowed'});
+        return res.status(405).json({ status: 405, message: 'Method Not Allowed' });
     }
 
     try {
@@ -98,13 +107,13 @@ export default async function handler(
         const limit = parseInt(req.query.limit as string, 10) || 10;
 
         // Fetch movies from the database using the movie service
-        const movies = await movie_service.getMovies(limit);
+        const movies = await MovieService.getMovies(limit);
 
-        res.status(200).json({status: 200, data: movies});
+        res.status(200).json({ status: 200, data: movies });
     } catch (error) {
         console.error("Failed to fetch movies:", error);
         // Providing a null or an empty array for data in case of an error
         // Adjust based on your preference or requirements
-        res.status(500).json({status: 500, message: "Failed to fetch movies"});
+        res.status(500).json({ status: 500, message: "Failed to fetch movies" });
     }
-}
+});
