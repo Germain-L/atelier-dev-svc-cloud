@@ -134,7 +134,7 @@ import { authenticate } from '../../../../../lib/authMiddleware';
  */
 export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IComment[] | IComment> | ErrorResponse>,
+  res: NextApiResponse<SuccessResponse<IComment[] | IComment> | ErrorResponse>
 ) {
   const { idMovie } = req.query;
 
@@ -142,7 +142,7 @@ export default authenticate(async function handler(
     case 'GET':
       try {
         const comments = await CommentService.getCommentsByMovieId(
-          idMovie as string,
+          idMovie as string
         );
         if (!comments) {
           return res

@@ -138,7 +138,7 @@ import { authenticate } from '../../../../../lib/authMiddleware';
  */
 export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IComment> | ErrorResponse>,
+  res: NextApiResponse<SuccessResponse<IComment> | ErrorResponse>
 ) {
   let { idMovie, idComment } = req.query;
   idMovie = idMovie as string;
@@ -181,7 +181,7 @@ export default authenticate(async function handler(
         const commentUpdate = req.body as Partial<IComment>;
         const updatedComment = await CommentService.updateComment(
           idComment as string,
-          commentUpdate,
+          commentUpdate
         );
         if (!updatedComment) {
           return res

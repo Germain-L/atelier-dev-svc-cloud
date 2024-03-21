@@ -50,7 +50,7 @@ import { authenticate } from '../../../lib/authMiddleware';
  */
 export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IMovie> | ErrorResponse>,
+  res: NextApiResponse<SuccessResponse<IMovie> | ErrorResponse>
 ) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
