@@ -1,16 +1,20 @@
-import { withSwagger } from 'next-swagger-doc';
+import {withSwagger} from 'next-swagger-doc';
 
 const swaggerHandler = withSwagger({
     definition: {
         openapi: '3.0.0',
         info: {
-            title: 'NextJS Swagger',
+            title: 'MFLIX Swagger',
             version: '0.1.0',
         },
         servers: [
             {
                 url: 'http://localhost:3000',
-                description: 'Serveur de développement local',
+                description: 'local development server',
+            },
+            {
+                url: 'https://atelier-dev-svc-cloud.vercel.app',
+                description: 'production server',
             },
         ],
     },
