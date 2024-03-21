@@ -158,13 +158,11 @@ export default async function handler(
             .status(404)
             .json({ status: 404, message: 'Comment not found' });
         }
-        return res
-          .status(200)
-          .json({
-            status: 200,
-            data: comment,
-            message: 'Comment retrieved successfully',
-          });
+        return res.status(200).json({
+          status: 200,
+          data: comment,
+          message: 'Comment retrieved successfully',
+        });
       } catch (error) {
         console.error('Failed to retrieve comment:', error);
         return res

@@ -148,13 +148,11 @@ export default async function handler(
             .status(404)
             .json({ status: 404, message: 'Comments not found' });
         }
-        return res
-          .status(200)
-          .json({
-            status: 200,
-            data: comments,
-            message: 'Comments retrieved successfully',
-          });
+        return res.status(200).json({
+          status: 200,
+          data: comments,
+          message: 'Comments retrieved successfully',
+        });
       } catch (error) {
         console.error('Failed to retrieve comments:', error);
         return res
@@ -171,13 +169,11 @@ export default async function handler(
         }
         const commentData = req.body;
         const comment = await CommentService.createComment(commentData);
-        return res
-          .status(201)
-          .json({
-            status: 201,
-            data: comment,
-            message: 'Comment created successfully',
-          });
+        return res.status(201).json({
+          status: 201,
+          data: comment,
+          message: 'Comment created successfully',
+        });
       } catch (error) {
         console.error('Failed to create comment:', error);
         return res

@@ -59,13 +59,11 @@ export default async function handler(
   try {
     const movie: IMovie = req.body;
     const createdMovie = await MovieService.createMovie(movie);
-    return res
-      .status(201)
-      .json({
-        status: 201,
-        data: createdMovie,
-        message: 'Movie created successfully',
-      });
+    return res.status(201).json({
+      status: 201,
+      data: createdMovie,
+      message: 'Movie created successfully',
+    });
   } catch (error) {
     console.error('Failed to create the movie:', error);
     return res
