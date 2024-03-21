@@ -3,6 +3,7 @@ import { ErrorResponse, SuccessResponse } from '../../../../../types/responses';
 import { IComment } from '../../../../../types/interfaces/comments';
 import CommentService from '../../../../../lib/services/CommentService';
 import { ObjectId } from 'mongodb';
+import { authenticate } from '../../../../../lib/authMiddleware';
 
 /**
  * @swagger
@@ -135,9 +136,9 @@ import { ObjectId } from 'mongodb';
  *               schema:
  *                 $ref: '#/components/schemas/Error'
  */
-export default async function handler(
+export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IComment> | ErrorResponse>
+  res: NextApiResponse<SuccessResponse<IComment> | ErrorResponse>,
 ) {
   let { idMovie, idComment } = req.query;
   idMovie = idMovie as string;
@@ -180,7 +181,7 @@ export default async function handler(
         const commentUpdate = req.body as Partial<IComment>;
         const updatedComment = await CommentService.updateComment(
           idComment as string,
-          commentUpdate
+          commentUpdate,
         );
         if (!updatedComment) {
           return res
@@ -218,4 +219,4 @@ export default async function handler(
         .status(405)
         .json({ status: 405, message: 'Method Not Allowed' });
   }
-}
+});

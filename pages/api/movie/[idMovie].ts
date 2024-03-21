@@ -3,6 +3,7 @@ import { ErrorResponse, SuccessResponse } from '../../../types/responses';
 import { IMovie } from '../../../types/interfaces/movie';
 import { ObjectId } from 'mongodb';
 import MovieService from '../../../lib/services/MovieService';
+import { authenticate } from '../../../lib/authMiddleware';
 
 /**
  * @swagger
@@ -112,9 +113,9 @@ import MovieService from '../../../lib/services/MovieService';
  *           type: string
  *           description: The error message
  */
-export default async function handler(
+export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IMovie> | ErrorResponse>
+  res: NextApiResponse<SuccessResponse<IMovie> | ErrorResponse>,
 ) {
   const allowedMethods = ['GET', 'PUT', 'DELETE'];
   const { idMovie } = req.query;
@@ -164,4 +165,4 @@ export default async function handler(
       .status(500)
       .json({ status: 500, message: 'Internal Server Error' });
   }
-}
+});

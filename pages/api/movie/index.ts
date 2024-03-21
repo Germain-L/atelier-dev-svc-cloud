@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ErrorResponse, SuccessResponse } from '../../../types/responses';
 import { IMovie } from '../../../types/interfaces/movie';
 import MovieService from '../../../lib/services/MovieService';
+import { authenticate } from '../../../lib/authMiddleware';
 
 /**
  * @swagger
@@ -47,9 +48,9 @@ import MovieService from '../../../lib/services/MovieService';
  *             schema:
  *               $ref: '#/components/schemas/Error'
  */
-export default async function handler(
+export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IMovie> | ErrorResponse>
+  res: NextApiResponse<SuccessResponse<IMovie> | ErrorResponse>,
 ) {
   if (req.method !== 'POST') {
     res.setHeader('Allow', ['POST']);
@@ -70,4 +71,4 @@ export default async function handler(
       .status(500)
       .json({ status: 500, message: 'Failed to create the movie' });
   }
-}
+});

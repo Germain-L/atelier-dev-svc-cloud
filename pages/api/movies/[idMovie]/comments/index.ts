@@ -2,6 +2,7 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { ErrorResponse, SuccessResponse } from '../../../../../types/responses';
 import { IComment } from '../../../../../types/interfaces/comments';
 import CommentService from '../../../../../lib/services/CommentService';
+import { authenticate } from '../../../../../lib/authMiddleware';
 
 /**
  * @swagger
@@ -131,9 +132,9 @@ import CommentService from '../../../../../lib/services/CommentService';
  *           type: string
  *           description: The error message
  */
-export default async function handler(
+export default authenticate(async function handler(
   req: NextApiRequest,
-  res: NextApiResponse<SuccessResponse<IComment[] | IComment> | ErrorResponse>
+  res: NextApiResponse<SuccessResponse<IComment[] | IComment> | ErrorResponse>,
 ) {
   const { idMovie } = req.query;
 
@@ -141,7 +142,7 @@ export default async function handler(
     case 'GET':
       try {
         const comments = await CommentService.getCommentsByMovieId(
-          idMovie as string
+          idMovie as string,
         );
         if (!comments) {
           return res
@@ -187,4 +188,4 @@ export default async function handler(
         .status(405)
         .json({ status: 405, message: 'Method Not Allowed' });
   }
-}
+});
