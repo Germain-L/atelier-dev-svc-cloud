@@ -7,6 +7,9 @@
     "test": "jest",
     "test:watch": "jest --watch"
   },
+  "engines": {
+    "node": "20.x"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "jsonwebtoken": "^9.0.2",
