@@ -1,5 +1,5 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {authenticate} from "../../../lib/authMiddleware";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { authenticate } from '../../../lib/authMiddleware';
 
 /**
  * @swagger
@@ -51,7 +51,13 @@ import {authenticate} from "../../../lib/authMiddleware";
  *       scheme: bearer
  *       bearerFormat: JWT
  */
-export default authenticate(async function handler(req: NextApiRequest, res: NextApiResponse) {
-    res.setHeader('Set-Cookie', 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict');
-    res.status(200).json({message: 'Logged out successfully'});
-})
+export default authenticate(async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  res.setHeader(
+    'Set-Cookie',
+    'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; HttpOnly; SameSite=Strict'
+  );
+  res.status(200).json({ message: 'Logged out successfully' });
+});

@@ -1,10 +1,10 @@
-import type {NextApiRequest, NextApiResponse} from 'next';
+import type { NextApiRequest, NextApiResponse } from 'next';
 import bcrypt from 'bcryptjs';
 import UserService from '../../../lib/services/UserService';
-import {IUser} from '../../../types/interfaces/users';
+import { IUser } from '../../../types/interfaces/users';
 
 interface RegisterResponse {
-    message: string;
+  message: string;
 }
 /**
  * @swagger
@@ -77,29 +77,36 @@ interface RegisterResponse {
  *           type: string
  *           description: Error message explaining what went wrong
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse<RegisterResponse>) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({message: 'Method not allowed'});
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<RegisterResponse>
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { email, name, password } = req.body as IUser;
+
+  if (!email || !name || !password) {
+    return res
+      .status(400)
+      .json({ message: 'Email, name, and password are required' });
+  }
+
+  try {
+    const userExists = await UserService.getUserByEmail(email);
+    if (userExists) {
+      return res.status(409).json({ message: 'User already exists' });
     }
 
-    const {email, name, password} = req.body as IUser;
+    const hashedPassword = await bcrypt.hash(password, 12);
+    await UserService.createUser({ email, name, password: hashedPassword });
 
-    if (!email || !name || !password) {
-        return res.status(400).json({message: 'Email, name, and password are required'});
-    }
-
-    try {
-        const userExists = await UserService.getUserByEmail(email);
-        if (userExists) {
-            return res.status(409).json({message: 'User already exists'});
-        }
-
-        const hashedPassword = await bcrypt.hash(password, 12);
-        await UserService.createUser({email, name, password: hashedPassword});
-
-        return res.status(201).json({message: 'User created successfully'});
-    } catch (error) {
-        console.error("Failed to create user:", error);
-        return res.status(500).json({message: 'An error occurred while creating the user'});
-    }
+    return res.status(201).json({ message: 'User created successfully' });
+  } catch (error) {
+    console.error('Failed to create user:', error);
+    return res
+      .status(500)
+      .json({ message: 'An error occurred while creating the user' });
+  }
 }

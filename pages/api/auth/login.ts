@@ -4,9 +4,9 @@ import jwt from 'jsonwebtoken';
 import UserService from '../../../lib/services/UserService';
 
 interface LoginResponse {
-    access_token?: string;
-    refresh_token?: string;
-    message?: string;
+  access_token?: string;
+  refresh_token?: string;
+  message?: string;
 }
 
 /**
@@ -85,38 +85,47 @@ interface LoginResponse {
  *           type: string
  *           description: Error message explaining what went wrong
  */
-export default async function loginHandler(req: NextApiRequest, res: NextApiResponse<LoginResponse>) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({ message: 'Method not allowed' });
+export default async function loginHandler(
+  req: NextApiRequest,
+  res: NextApiResponse<LoginResponse>
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ message: 'Email and password are required' });
+  }
+
+  try {
+    const user = await UserService.getUserByEmail(email);
+    if (!user) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    const { email, password } = req.body;
-
-    if (!email || !password) {
-        return res.status(400).json({ message: 'Email and password are required' });
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ message: 'Invalid email or password' });
     }
 
-    try {
-        const user = await UserService.getUserByEmail(email);
-        if (!user) {
-            return res.status(401).json({ message: 'Invalid email or password' });
-        }
+    const secretString = process.env.JWT_SECRET as string;
+    const access_token = jwt.sign({ userId: user._id }, secretString, {
+      expiresIn: '1h',
+    });
+    const refresh_token = jwt.sign({ userId: user._id }, secretString, {
+      expiresIn: '7d',
+    });
 
-        const passwordMatch = await bcrypt.compare(password, user.password);
-        if (!passwordMatch) {
-            return res.status(401).json({ message: 'Invalid email or password' });
-        }
+    // Store refresh_token in your database
+    await UserService.storeRefreshToken(user._id, refresh_token);
 
-        const secretString = process.env.JWT_SECRET as string;
-        const access_token = jwt.sign({ userId: user._id }, secretString, { expiresIn: '1h' });
-        const refresh_token = jwt.sign({ userId: user._id }, secretString, { expiresIn: '7d' });
-
-        // Store refresh_token in your database
-        await UserService.storeRefreshToken(user._id, refresh_token);
-
-        return res.status(200).json({ access_token, refresh_token });
-    } catch (error) {
-        console.error('Login Error:', error);
-        return res.status(500).json({ message: 'An error occurred while logging in' });
-    }
+    return res.status(200).json({ access_token, refresh_token });
+  } catch (error) {
+    console.error('Login Error:', error);
+    return res
+      .status(500)
+      .json({ message: 'An error occurred while logging in' });
+  }
 }

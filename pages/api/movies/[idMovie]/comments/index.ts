@@ -1,7 +1,7 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import {ErrorResponse, SuccessResponse} from "../../../../../types/responses";
-import {IComment} from "../../../../../types/interfaces/comments";
-import CommentService from "../../../../../lib/services/CommentService";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ErrorResponse, SuccessResponse } from '../../../../../types/responses';
+import { IComment } from '../../../../../types/interfaces/comments';
+import CommentService from '../../../../../lib/services/CommentService';
 
 /**
  * @swagger
@@ -132,39 +132,63 @@ import CommentService from "../../../../../lib/services/CommentService";
  *           description: The error message
  */
 export default async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<SuccessResponse<IComment[] | IComment> | ErrorResponse>
+  req: NextApiRequest,
+  res: NextApiResponse<SuccessResponse<IComment[] | IComment> | ErrorResponse>
 ) {
-    const {idMovie} = req.query;
+  const { idMovie } = req.query;
 
-    switch (req.method) {
-        case 'GET':
-            try {
-                const comments = await CommentService.getCommentsByMovieId(idMovie as string);
-                if (!comments) {
-                    return res.status(404).json({status: 404, message: 'Comments not found'});
-                }
-                return res.status(200).json({status: 200, data: comments, message: 'Comments retrieved successfully'});
-            } catch (error) {
-                console.error("Failed to retrieve comments:", error);
-                return res.status(500).json({status: 500, message: "Failed to retrieve comments"});
-            }
+  switch (req.method) {
+    case 'GET':
+      try {
+        const comments = await CommentService.getCommentsByMovieId(
+          idMovie as string
+        );
+        if (!comments) {
+          return res
+            .status(404)
+            .json({ status: 404, message: 'Comments not found' });
+        }
+        return res
+          .status(200)
+          .json({
+            status: 200,
+            data: comments,
+            message: 'Comments retrieved successfully',
+          });
+      } catch (error) {
+        console.error('Failed to retrieve comments:', error);
+        return res
+          .status(500)
+          .json({ status: 500, message: 'Failed to retrieve comments' });
+      }
 
-        case 'POST':
-            try {
-                if (!idMovie) {
-                    return res.status(400).json({status: 400, message: 'Movie ID is required'});
-                }
-                const commentData = req.body;
-                const comment = await CommentService.createComment(commentData);
-                return res.status(201).json({status: 201, data: comment, message: 'Comment created successfully'});
-            } catch (error) {
-                console.error("Failed to create comment:", error);
-                return res.status(500).json({status: 500, message: "Failed to create comment"});
-            }
+    case 'POST':
+      try {
+        if (!idMovie) {
+          return res
+            .status(400)
+            .json({ status: 400, message: 'Movie ID is required' });
+        }
+        const commentData = req.body;
+        const comment = await CommentService.createComment(commentData);
+        return res
+          .status(201)
+          .json({
+            status: 201,
+            data: comment,
+            message: 'Comment created successfully',
+          });
+      } catch (error) {
+        console.error('Failed to create comment:', error);
+        return res
+          .status(500)
+          .json({ status: 500, message: 'Failed to create comment' });
+      }
 
-        default:
-            res.setHeader('Allow', ['GET', 'POST']);
-            return res.status(405).json({status: 405, message: 'Method Not Allowed'});
-    }
+    default:
+      res.setHeader('Allow', ['GET', 'POST']);
+      return res
+        .status(405)
+        .json({ status: 405, message: 'Method Not Allowed' });
+  }
 }

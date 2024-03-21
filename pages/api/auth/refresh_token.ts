@@ -1,11 +1,11 @@
-import {NextApiRequest, NextApiResponse} from "next";
-import jwt from "jsonwebtoken";
-import UserService from "../../../lib/services/UserService";
+import { NextApiRequest, NextApiResponse } from 'next';
+import jwt from 'jsonwebtoken';
+import UserService from '../../../lib/services/UserService';
 
 interface RefreshTokenResponse {
-    access_token?: string;
-    refresh_token?: string;
-    message?: string;
+  access_token?: string;
+  refresh_token?: string;
+  message?: string;
 }
 /**
  * @swagger
@@ -71,39 +71,59 @@ interface RefreshTokenResponse {
  *           type: string
  *           description: Error message explaining what went wrong
  */
-export default async function handler(req: NextApiRequest, res: NextApiResponse<RefreshTokenResponse>) {
-    if (req.method !== 'POST') {
-        return res.status(405).json({message: 'Method not allowed'});
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse<RefreshTokenResponse>
+) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ message: 'Method not allowed' });
+  }
+
+  const { refresh_token } = req.body;
+
+  if (!refresh_token) {
+    return res.status(400).json({ message: 'Refresh token is required' });
+  }
+
+  let decoded: any;
+
+  try {
+    decoded = jwt.verify(refresh_token, process.env.JWT_SECRET as string);
+  } catch (error) {
+    return res.status(401).json({ message: 'Unauthorized: Invalid token' });
+  }
+
+  try {
+    const userId = decoded.userId;
+
+    const isValid = await UserService.validateRefreshToken(
+      userId,
+      refresh_token
+    );
+    if (!isValid) {
+      return res
+        .status(401)
+        .json({ message: 'Unauthorized: Invalid refresh token' });
     }
 
-    const {refresh_token} = req.body;
+    const access_token = jwt.sign(
+      { userId },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '1h' }
+    );
+    const newRefreshToken = jwt.sign(
+      { userId },
+      process.env.JWT_SECRET as string,
+      { expiresIn: '7d' }
+    );
 
-    if (!refresh_token) {
-        return res.status(400).json({message: 'Refresh token is required'});
-    }
-
-    let decoded: any;
-
-    try {
-        decoded = jwt.verify(refresh_token, process.env.JWT_SECRET as string);
-    } catch (error) {
-        return res.status(401).json({message: 'Unauthorized: Invalid token'});
-    }
-
-    try {
-        const userId = decoded.userId;
-
-        const isValid = await UserService.validateRefreshToken(userId, refresh_token);
-        if (!isValid) {
-            return res.status(401).json({message: 'Unauthorized: Invalid refresh token'});
-        }
-
-        const access_token = jwt.sign({userId}, process.env.JWT_SECRET as string, {expiresIn: '1h'});
-        const newRefreshToken = jwt.sign({userId}, process.env.JWT_SECRET as string, {expiresIn: '7d'});
-
-        return res.status(200).json({access_token, refresh_token: newRefreshToken});
-    } catch (error) {
-        console.error('Refresh Token Error:', error);
-        return res.status(500).json({message: 'An error occurred while refreshing token'});
-    }
+    return res
+      .status(200)
+      .json({ access_token, refresh_token: newRefreshToken });
+  } catch (error) {
+    console.error('Refresh Token Error:', error);
+    return res
+      .status(500)
+      .json({ message: 'An error occurred while refreshing token' });
+  }
 }

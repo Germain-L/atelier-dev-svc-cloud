@@ -1,8 +1,8 @@
-import { NextApiRequest, NextApiResponse } from "next";
-import { ErrorResponse, SuccessResponse } from "../../../types/responses";
-import { IMovie } from "../../../types/interfaces/movie";
-import MovieService from "../../../lib/services/MovieService";
-import {authenticate} from "../../../lib/authMiddleware";
+import { NextApiRequest, NextApiResponse } from 'next';
+import { ErrorResponse, SuccessResponse } from '../../../types/responses';
+import { IMovie } from '../../../types/interfaces/movie';
+import MovieService from '../../../lib/services/MovieService';
+import { authenticate } from '../../../lib/authMiddleware';
 
 /**
  * @swagger
@@ -92,28 +92,28 @@ import {authenticate} from "../../../lib/authMiddleware";
  *         - poster
  */
 export default authenticate(async function handler(
-    req: NextApiRequest,
-    res: NextApiResponse<SuccessResponse<IMovie[]> | ErrorResponse>
+  req: NextApiRequest,
+  res: NextApiResponse<SuccessResponse<IMovie[]> | ErrorResponse>
 ) {
-    if (req.method !== 'GET') {
-        // If not, return a 405 Method Not Allowed status code
-        // inform the client about allowed methods
-        res.setHeader('Allow', ['GET']);
-        return res.status(405).json({ status: 405, message: 'Method Not Allowed' });
-    }
+  if (req.method !== 'GET') {
+    // If not, return a 405 Method Not Allowed status code
+    // inform the client about allowed methods
+    res.setHeader('Allow', ['GET']);
+    return res.status(405).json({ status: 405, message: 'Method Not Allowed' });
+  }
 
-    try {
-        // Parse the `limit` parameter, default to 10 if not provided
-        const limit = parseInt(req.query.limit as string, 10) || 10;
+  try {
+    // Parse the `limit` parameter, default to 10 if not provided
+    const limit = parseInt(req.query.limit as string, 10) || 10;
 
-        // Fetch movies from the database using the movie service
-        const movies = await MovieService.getMovies(limit);
+    // Fetch movies from the database using the movie service
+    const movies = await MovieService.getMovies(limit);
 
-        res.status(200).json({ status: 200, data: movies });
-    } catch (error) {
-        console.error("Failed to fetch movies:", error);
-        // Providing a null or an empty array for data in case of an error
-        // Adjust based on your preference or requirements
-        res.status(500).json({ status: 500, message: "Failed to fetch movies" });
-    }
+    res.status(200).json({ status: 200, data: movies });
+  } catch (error) {
+    console.error('Failed to fetch movies:', error);
+    // Providing a null or an empty array for data in case of an error
+    // Adjust based on your preference or requirements
+    res.status(500).json({ status: 500, message: 'Failed to fetch movies' });
+  }
 });
