@@ -9,7 +9,7 @@ const swaggerHandler = withSwagger({
         },
         servers: [
             {
-                url: 'http://localhost:3000', // Remplacez 3000 par le port utilisé si différent
+                url: 'http://localhost:3000',
                 description: 'Serveur de développement local',
             },
         ],

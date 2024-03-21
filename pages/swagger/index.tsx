@@ -6,7 +6,7 @@ const Swagger = (): JSX.Element => {
     return (
         <div>
             <Head>
-                <title>BrowserStack Demo API</title>
+                <title>MFLIX API</title>
                 <meta name="description" content="MFLIX API"/>
                 <link rel="icon" href="/favicon.svg"/>
             </Head>

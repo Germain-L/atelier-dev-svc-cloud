@@ -14,6 +14,8 @@ import {authenticate} from "../../../lib/authMiddleware";
  *   get:
  *     tags:
  *       - Movies
+ *     security:
+ *       - bearerAuth: []
  *     summary: Récupère tous les films
  *     description: Renvoie une liste de tous les films disponibles dans la base de données. Peut être limité par le paramètre `limit`.
  *     parameters:
@@ -24,8 +26,6 @@ import {authenticate} from "../../../lib/authMiddleware";
  *           default: 10
  *         required: false
  *         description: Limite le nombre de films renvoyés. La valeur par défaut est 10.
- *     security:
- *       - bearerAuth: []
  *     responses:
  *       200:
  *         description: Une liste de films.

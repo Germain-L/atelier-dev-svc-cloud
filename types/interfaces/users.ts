@@ -5,4 +5,5 @@ export interface IUser {
     email: string;
     name: string;
     password: string;
+    refresh_token?: string;
 }

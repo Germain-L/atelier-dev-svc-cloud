@@ -14,6 +14,8 @@ import MovieService from "../../../lib/services/MovieService";
  *   get:
  *     summary: Gets a movie by ID
  *     tags: [Movies]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: idMovie
@@ -40,6 +42,8 @@ import MovieService from "../../../lib/services/MovieService";
  *   put:
  *     summary: Updates a movie by ID
  *     tags: [Movies]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: idMovie
@@ -68,6 +72,8 @@ import MovieService from "../../../lib/services/MovieService";
  *   delete:
  *     summary: Deletes a movie by ID
  *     tags: [Movies]
+ *     security:
+ *       - bearerAuth: []
  *     parameters:
  *       - in: path
  *         name: idMovie

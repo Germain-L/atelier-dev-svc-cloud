@@ -12,6 +12,8 @@ import {ObjectId} from "mongodb";
  *       summary: Retrieves a specific comment for a movie
  *       tags:
  *         - Comments
+ *       security:
+ *         - bearerAuth: []
  *       parameters:
  *         - in: path
  *           name: idMovie
@@ -48,6 +50,8 @@ import {ObjectId} from "mongodb";
  *       summary: Updates an existing comment for a movie
  *       tags:
  *         - Comments
+ *       security:
+ *         - bearerAuth: []
  *       parameters:
  *         - in: path
  *           name: idMovie
@@ -96,6 +100,8 @@ import {ObjectId} from "mongodb";
  *       summary: Deletes a comment for a movie
  *       tags:
  *         - Comments
+ *       security:
+ *         - bearerAuth: []
  *       parameters:
  *         - in: path
  *           name: idMovie

@@ -9,6 +9,8 @@ import CommentService from "../../../../../lib/services/CommentService";
  *   /api/movies/{idMovie}/comments:
  *     get:
  *       summary: Retrieves comments for a specific movie
+ *       security:
+ *         - bearerAuth: []
  *       tags:
  *         - Comments
  *       parameters:
@@ -41,6 +43,8 @@ import CommentService from "../../../../../lib/services/CommentService";
  *                 $ref: '#/components/schemas/Error'
  *     post:
  *       summary: Creates a new comment for a specific movie
+ *       security:
+ *         - bearerAuth: []
  *       tags:
  *         - Comments
  *       parameters:
