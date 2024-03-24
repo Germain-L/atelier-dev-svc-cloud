@@ -12,7 +12,7 @@ interface RegisterResponse {
  *   - name: Users
  *     description: User management and registration
  *
- * /api/users/register:
+ * /api/auth/register:
  *   post:
  *     summary: Registers a new user
  *     tags: [Users]

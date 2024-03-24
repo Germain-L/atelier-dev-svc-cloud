@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ErrorResponse, SuccessResponse } from '../../../../../types/responses';
+import { ErrorResponse, SuccessResponse } from '../../../../../types/interfaces/responses';
 import { IComment } from '../../../../../types/interfaces/comments';
 import CommentService from '../../../../../lib/services/CommentService';
 import { authenticate } from '../../../../../lib/authMiddleware';

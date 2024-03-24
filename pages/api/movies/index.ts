@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ErrorResponse, SuccessResponse } from '../../../types/responses';
+import { ErrorResponse, SuccessResponse } from '../../../types/interfaces/responses';
 import { IMovie } from '../../../types/interfaces/movie';
 import MovieService from '../../../lib/services/MovieService';
 import { authenticate } from '../../../lib/authMiddleware';

@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { ErrorResponse, SuccessResponse } from '../../../types/responses';
+import { ErrorResponse, SuccessResponse } from '../../../types/interfaces/responses';
 import { IMovie } from '../../../types/interfaces/movie';
 import { ObjectId } from 'mongodb';
 import MovieService from '../../../lib/services/MovieService';
